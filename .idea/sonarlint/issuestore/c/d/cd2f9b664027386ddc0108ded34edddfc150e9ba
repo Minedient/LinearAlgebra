@@ -1,0 +1,62 @@
+
+`	java:S112:"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ
+`	java:S112E"FDefine and throw a dedicated exception instead of using a generic one.(ÅâÖÜÿÿÿÿÿ
+a	java:S112“"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ
+`	java:S112>"FDefine and throw a dedicated exception instead of using a generic one.(Àò­îûÿÿÿÿ
+a	java:S112‚"FDefine and throw a dedicated exception instead of using a generic one.(ÅâÖÜÿÿÿÿÿ
+a	java:S112‡"FDefine and throw a dedicated exception instead of using a generic one.(Ó¸ÛÎûÿÿÿÿ
+E
+java:S1121€".Extract the assignment out of this expression.(Š’œ½
+k	java:S117'"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¡”¦‹ýÿÿÿÿ
+k	java:S117'"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¡”¦‹ýÿÿÿÿ
+f	java:S117Q"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ò÷•ü
+f	java:S117d"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÝŽÙ»
+f	java:S117d"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÝŽÙ»
+g	java:S117€"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Š’œ½
+o	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ð‡’ð
+S	java:S106("9Replace this use of System.out or System.err by a logger.(Ý‘ò­üÿÿÿÿ
+N	java:S106)"9Replace this use of System.out or System.err by a logger.(Øßëü
+V	java:S1257"<This block of commented-out lines of code should be removed.(ãÔ‰äÿÿÿÿÿ
+X
+java:S1854€"ARemove this useless assignment to local variable "buildCallback".(Š’œ½
+V	java:S125@"<This block of commented-out lines of code should be removed.(Å©¿Úúÿÿÿÿ
+S	java:S106J"9Replace this use of System.out or System.err by a logger.(ã¹¯‹üÿÿÿÿ
+S	java:S106N"9Replace this use of System.out or System.err by a logger.(Ó³ëýÿÿÿÿ
+N	java:S106R"9Replace this use of System.out or System.err by a logger.(â±¼
+Q	java:S125a"<This block of commented-out lines of code should be removed.(Ã’®Õ
+N	java:S106d"9Replace this use of System.out or System.err by a logger.(ÝŽÙ»
+S	java:S106g"9Replace this use of System.out or System.err by a logger.(Í ÊÔùÿÿÿÿ
+Q	java:S125i"<This block of commented-out lines of code should be removed.(È™Ô‚
+N	java:S106k"9Replace this use of System.out or System.err by a logger.(Û­›
+N	java:S106p"9Replace this use of System.out or System.err by a logger.(«Ä„ý
+V	java:S125o"<This block of commented-out lines of code should be removed.(çÑ¤¦üÿÿÿÿ
+N	java:S106s"9Replace this use of System.out or System.err by a logger.(“Ž‹›
+S	java:S106v"9Replace this use of System.out or System.err by a logger.(˜˜ ‘þÿÿÿÿ
+M
+java:S1481}"2Remove this unused "buildCallback" local variable.(¹áÆ©ûÿÿÿÿ
+O	java:S106"9Replace this use of System.out or System.err by a logger.(ä´ûÑ
+T	java:S106ˆ"9Replace this use of System.out or System.err by a logger.(â€üíûÿÿÿÿ
+m
+java:S3457ˆ"Q%n should be used in place of \n to produce the platform-specific line separator.(â€üíûÿÿÿÿ
+u
+java:S2142’"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€
+N	java:S106™"9Replace this use of System.out or System.err by a logger.(ÎÏöt
+T	java:S106"9Replace this use of System.out or System.err by a logger.(ßÔÿ‡øÿÿÿÿ
+O	java:S106 "9Replace this use of System.out or System.err by a logger.(Ï åó
+T	java:S106¦"9Replace this use of System.out or System.err by a logger.(íÆ©íüÿÿÿÿ
+T	java:S106©"9Replace this use of System.out or System.err by a logger.(‘ÎÐåüÿÿÿÿ
+T	java:S106®"9Replace this use of System.out or System.err by a logger.(›®–˜ÿÿÿÿÿ
+T	java:S106³"9Replace this use of System.out or System.err by a logger.(íäªýÿÿÿÿÿ
+O	java:S106µ"9Replace this use of System.out or System.err by a logger.(º¤ˆÆ
+R	java:S125¼"<This block of commented-out lines of code should be removed.(¾ãº¤
+T	java:S106Å"9Replace this use of System.out or System.err by a logger.(íÆ©íüÿÿÿÿ
+T	java:S106Ç"9Replace this use of System.out or System.err by a logger.(‘ÎÐåüÿÿÿÿ
+T	java:S106Ì"9Replace this use of System.out or System.err by a logger.(›®–˜ÿÿÿÿÿ
+T	java:S106Ò"9Replace this use of System.out or System.err by a logger.(íäªýÿÿÿÿÿ
+O	java:S106Ô"9Replace this use of System.out or System.err by a logger.(º¤ˆÆ
+O	java:S106ø"9Replace this use of System.out or System.err by a logger.(Ì„êÆ
+T	java:S106ú"9Replace this use of System.out or System.err by a logger.(ÞžÒ—üÿÿÿÿ
+Q
+java:S1068%";Remove this unused "CREATE_CONTEXT_CALLBACK" private field.(’˜»‡
+@
+java:S1144ý")Remove this unused private "test" method.(÷©üˆ
