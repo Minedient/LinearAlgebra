@@ -13,6 +13,11 @@ import java.util.function.DoubleFunction;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
+/**
+ * Matrix class
+ *
+ * @author Minedient
+ */
 public class Matrix {
 
     public static final int NUM_OF_THREADS = Runtime.getRuntime().availableProcessors();
@@ -645,6 +650,11 @@ public class Matrix {
         setRow(rowNumber, tempRow);
     }
 
+    /**
+     * Multiply a column in this Matrix
+     * @param columnNumber  The column to be multiplied
+     * @param scale         The scale factor of the row
+     */
     public void multiplyColumn(int columnNumber, double scale) {
         double[] tempColumn = getColumn(columnNumber);
         for (int i = 0; i < tempColumn.length; i++)
@@ -652,6 +662,12 @@ public class Matrix {
         setColumn(columnNumber, tempColumn);
     }
 
+    /**
+     * Add multiples of Row A to Row B in this Matrix
+     * @param sourceRow     The source row (rowA)
+     * @param targetRow     The target row (rowB)
+     * @param scale         The scale of source row
+     */
     public void addMultiplesToRow(int sourceRow, int targetRow, double scale) {
         double[] tempRow = getRow(sourceRow);
         double[] newValues = getRow(targetRow);
@@ -660,6 +676,13 @@ public class Matrix {
         setRow(targetRow, newValues);
     }
 
+
+    /**
+     * Add multiples of Column A to Column B in this Matrix
+     * @param sourceColumn     The source column (columnA)
+     * @param targetColumn     The target column (columnB)
+     * @param scale         The scale of source column
+     */
     public void addMultiplesToColumn(int sourceColumn, int targetColumn, double scale) {
         double[] tempColumn = getColumn(sourceColumn);
         double[] newValues = getColumn(targetColumn);
@@ -668,6 +691,13 @@ public class Matrix {
         setColumn(targetColumn, newValues);
     }
 
+    /**
+     * Multiply each entry in the Matrix m to each entry this Matrix (In-place)
+     *
+     * @param m The matrix to multiply
+     * @return  The result matrix
+     * @throws MatrixDimensionsNotMatchException
+     */
     public Matrix linearMultiplication(Matrix m) throws MatrixDimensionsNotMatchException {
         Matrix.ensureSameSize(this, m);
         for (int i = 0; i < this.data.length; i++) {
@@ -676,15 +706,28 @@ public class Matrix {
         return this;
     }
 
+    /**
+     * Initialize this matrix as an Identity matrix
+     * <br>
+     * Notice that it does not perform check on its dimension
+     */
     private void initializeAsIdentity() {
         for (int i = 0; i < this.numOfRows; i++)
             setDatum(i, i, 1);
     }
 
+    /**
+     * Check if this matrix is a square matrix
+     * @return true if it is a square matrix, otherwise false
+     */
     public boolean isSquareMatrix() {
         return this.numOfRows == this.numOfColumns;
     }
 
+    /**
+     * Get a {@code MatrixDimension} object of this matrix
+     * @return  The object
+     */
     public MatrixDimension getDimension() {
         return new MatrixDimension(numOfRows, numOfColumns);
     }
@@ -722,6 +765,10 @@ public class Matrix {
 
     }
 
+    /**
+     * Fill the matrix with random doubles
+     * @return this matrix
+     */
     public Matrix fillRandomDoubles() {
         for (int i = 0; i < data.length; i++) {
             data[i] = Math.random();
@@ -729,15 +776,30 @@ public class Matrix {
         return this;
     }
 
+    /**
+     * Perform functions on all entries in this matrix (in-place)
+     * <br>
+     * Example: {@code matrix.forEach(e => e+1);}
+     *
+     * @param function  The function to perform
+     */
     public void forEach(DoubleFunction<Double> function) {
         for (int i = 0; i < data.length; i++)
             data[i] = function.apply(data[i]);
     }
 
+    /**
+     * Get the data array of this matrix
+     * @return  The data array
+     */
     public double[] getData() {
         return this.data;
     }
 
+    /**
+     * Set the data of this matrix given a {@code DoubleBuffer} (used in OpenCL matrix function).
+     * @param buffer The DoubleBuffer object
+     */
     public void setData(DoubleBuffer buffer) {
         double[] arr = new double[buffer.capacity()];
         for (int i = 0; i < buffer.capacity(); i++) {
@@ -746,6 +808,10 @@ public class Matrix {
         System.arraycopy(arr, 0, this.data, 0, buffer.capacity());
     }
 
+    /**
+     * Get the data array of this matrix as a float array
+     * @return  The data array
+     */
     public float[] getDataAsFloat() {
         float[] fs = new float[data.length];
         for (int i = 0; i < data.length; i++) {
@@ -754,6 +820,9 @@ public class Matrix {
         return fs;
     }
 
+    /**
+     * Print the matrix without newline
+     */
     public void toSimpleString() {
         System.out.print("[");
         for (int i = 0; i < data.length; i++) {
@@ -764,13 +833,19 @@ public class Matrix {
         System.out.print("]\n");
     }
 
+    /**
+     * Initialize mode of the matrix
+     */
     private enum INIT_MODE {NULL, IDENTITY}
 }
 
+/**
+ * A work assignment class aimed to provide work for {@code RowWorker}.
+ */
 class ParallelMatrixMonitor {
 
     private static final int MAX_REQUEST = 128;
-    private final RowWorker[] threadPool;
+    private final Worker[] threadPool;
     private final CalculationRequest[] requestsQueue;
     private int tail;
     private int head;
@@ -781,9 +856,9 @@ class ParallelMatrixMonitor {
         this.head = 0;
         this.tail = 0;
         this.count = 0;
-        this.threadPool = new RowWorker[numOfThreads];
+        this.threadPool = new Worker[numOfThreads];
         for (int i = 0; i < numOfThreads; i++) {
-            threadPool[i] = new RowWorker(this);
+            threadPool[i] = new Worker(this);
         }
         startWorkers();
     }
@@ -830,12 +905,16 @@ class ParallelMatrixMonitor {
     }
 }
 
-
-class RowWorker extends Thread {
+/**
+ * Get request from {@code ParallelMatrixMonitor} and run calculations when it is alive.
+ * <br>
+ * Stop processing any request after it has been terminated.
+ */
+class Worker extends Thread {
     private final ParallelMatrixMonitor monitor;
     private boolean alive = true;
 
-    RowWorker(ParallelMatrixMonitor monitor) {
+    Worker(ParallelMatrixMonitor monitor) {
         this.monitor = monitor;
     }
 
