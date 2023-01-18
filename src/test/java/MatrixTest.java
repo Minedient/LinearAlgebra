@@ -249,15 +249,16 @@ public class MatrixTest {
 
     @Test
     void multiThreadedAdditionSpeedTest() throws MatrixDimensionsNotMatchException {
-        Matrix m1 = Matrix.createNewEmptyMatrix(1000,1000).fillRandomDoubles();
-        Matrix m2 = Matrix.createNewEmptyMatrix(1000,1000).fillRandomDoubles();
+        Matrix m1 = Matrix.createNewEmptyMatrix(2000,2000).fillRandomDoubles();
+        Matrix m2 = Matrix.createNewEmptyMatrix(2000,2000).fillRandomDoubles();
         long start = System.currentTimeMillis();
         Matrix m3 = Matrix.multiThreadedAddition(m1,m2);
         System.out.println("MT version takes " + (System.currentTimeMillis() - start) + "ms");
         start = System.currentTimeMillis();
-        Matrix m4 = Matrix.addition(m1,m2);
+        Matrix m5 = Matrix.addition(m1,m2);
         System.out.println("ST version takes " + (System.currentTimeMillis() - start) + "ms");
-        assertEquals(m3, m4);
+        assertEquals(m3, m5);
+        System.out.println("The result are the same!");
     }
 
 

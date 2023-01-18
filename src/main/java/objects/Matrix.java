@@ -8,6 +8,7 @@ import util.OpenCLTasker;
 
 import java.nio.DoubleBuffer;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.function.DoubleFunction;
 import java.util.stream.DoubleStream;
@@ -33,8 +34,9 @@ public class Matrix {
 
     /**
      * Create a new {@code Matrix} given its number of rows and columns
-     * @param numOfRows     Matrix's number of rows
-     * @param numOfColumns  Matrix's number of columns
+     *
+     * @param numOfRows    Matrix's number of rows
+     * @param numOfColumns Matrix's number of columns
      */
     Matrix(int numOfRows, int numOfColumns) {
         this.numOfRows = numOfRows;
@@ -44,6 +46,7 @@ public class Matrix {
 
     /**
      * Create a new Matrix using {@code MatrixDimension}
+     *
      * @param dimension The dimension of the {@code Matrix}
      */
     private Matrix(MatrixDimension dimension) {
@@ -74,8 +77,9 @@ public class Matrix {
 
     /**
      * Create an empty {@code Matrix} given the number of rows and columns
-     * @param numOfRows     Matrix's number of rows
-     * @param numOfColumns  Matrix's number of columns
+     *
+     * @param numOfRows    Matrix's number of rows
+     * @param numOfColumns Matrix's number of columns
      * @return An empty matrix with given number of rows and columns
      */
     public static Matrix createNewEmptyMatrix(int numOfRows, int numOfColumns) {
@@ -85,13 +89,13 @@ public class Matrix {
     /**
      * Create a new matrix given an array of double arrays.
      * <p>
-     *     {@code Matrix.createNewFilledMatrix(new double[]{1,2,3}, new double[]{4,5,6};}
+     * {@code Matrix.createNewFilledMatrix(new double[]{1,2,3}, new double[]{4,5,6};}
      * </p>
-     *
+     * <p>
      * Noticed that if the length of each subarray doesn't match the first subarray,
      * a {@code MatrixInitialSizeException} with be thrown
      *
-     * @param data  The array of double arrays.
+     * @param data The array of double arrays.
      * @return A new matrix with given data
      */
     public static Matrix createNewFilledMatrix(double[]... data) {
@@ -100,13 +104,13 @@ public class Matrix {
 
     /**
      * Create a new matrix given its number of rows and columns and an array of doubles
-     *
+     * <p>
      * Noticed that if the length of the array doesn't match the product of rows and columns
      * of the Matrix, a {@code MatrixInitialSizeException} with be thrown
      *
-     * @param numOfRows     Matrix's number of rows
-     * @param numOfColumns  Matrix's number of columns
-     * @param data          Matrix's data
+     * @param numOfRows    Matrix's number of rows
+     * @param numOfColumns Matrix's number of columns
+     * @param data         Matrix's data
      * @return A new matrix with given rows, columns and data.
      */
     public static Matrix createNewFilledMatrix(int numOfRows, int numOfColumns, double... data) {
@@ -119,8 +123,9 @@ public class Matrix {
 
     /**
      * Create an empty {@code Matrix} given a {@code MatrixDimension}
-     * @param dimension     The dimension of the matrix
-     * @return  An empty matrix with given dimension
+     *
+     * @param dimension The dimension of the matrix
+     * @return An empty matrix with given dimension
      */
     public static Matrix createNewEmptyMatrix(MatrixDimension dimension) {
         return new Matrix(dimension);
@@ -128,8 +133,9 @@ public class Matrix {
 
     /**
      * Create an empty {@code Matrix} that represent a Row Vector
-     * @param size      The size of the Row Vector
-     * @return  An empty matrix with dimension [1, n] where n is the size
+     *
+     * @param size The size of the Row Vector
+     * @return An empty matrix with dimension [1, n] where n is the size
      */
     public static Matrix createNewEmptyRowVector(int size) {
         return new Matrix(1, size);
@@ -137,8 +143,9 @@ public class Matrix {
 
     /**
      * Create a filled Row Vector with given data
-     * @param data      The data
-     * @return  A filled matrix with dimension [1, n] where n is the size
+     *
+     * @param data The data
+     * @return A filled matrix with dimension [1, n] where n is the size
      */
     public static Matrix createNewFilledRowVector(double... data) {
         Matrix rowVector = createNewFilledMatrix(1, data.length, data);
@@ -147,8 +154,9 @@ public class Matrix {
 
     /**
      * Create an empty {@code Matrix} that represent a Column Vector
-     * @param size      The size of the Column Vector
-     * @return  An empty matrix with dimension [n, 1] where n is the size
+     *
+     * @param size The size of the Column Vector
+     * @return An empty matrix with dimension [n, 1] where n is the size
      */
     public static Matrix createNewEmptyColumnVector(int size) {
         return new Matrix(size, 1);
@@ -156,8 +164,9 @@ public class Matrix {
 
     /**
      * Create a filled Column Vector with given data
-     * @param data      The data
-     * @return  A filled matrix with dimension [n, 1] where n is the size
+     *
+     * @param data The data
+     * @return A filled matrix with dimension [n, 1] where n is the size
      */
     public static Matrix createNewFilledColumnVector(double... data) {
         Matrix columnVector = createNewFilledMatrix(data.length, 1, data);
@@ -166,8 +175,9 @@ public class Matrix {
 
     /**
      * Create a new instance of {@code Matrix} that resemble the original Matrix
-     * @param matrix    The matrix to copy from
-     * @return  A new instance of {@code Matrix} that resemble the original Matrix.
+     *
+     * @param matrix The matrix to copy from
+     * @return A new instance of {@code Matrix} that resemble the original Matrix.
      */
     public static Matrix copyingMatrix(Matrix matrix) {
         return new Matrix(matrix);
@@ -176,8 +186,8 @@ public class Matrix {
     /**
      * Check if two {@code Matrix} have the same size (dimension).
      *
-     * @param m1    The first matrix
-     * @param m2    The second matrix
+     * @param m1 The first matrix
+     * @param m2 The second matrix
      * @return {@code MatrixDimension}, if they are the same size
      * @throws MatrixDimensionsNotMatchException
      */
@@ -190,8 +200,8 @@ public class Matrix {
     /**
      * Add two matrix
      *
-     * @param m1    The first matrix
-     * @param m2    The second matrix
+     * @param m1 The first matrix
+     * @param m2 The second matrix
      * @return answer
      * @throws MatrixDimensionsNotMatchException
      */
@@ -206,8 +216,8 @@ public class Matrix {
     /**
      * Subtract to matrix
      *
-     * @param m1    The first matrix
-     * @param m2    The second matrix
+     * @param m1 The first matrix
+     * @param m2 The second matrix
      * @return answer
      * @throws MatrixDimensionsNotMatchException
      */
@@ -221,9 +231,10 @@ public class Matrix {
 
     /**
      * Do a scalar multiplication on matrix
-     * @param matrix    The matrix to be multiplied
-     * @param scale     The scale
-     * @return  The scaled matrix
+     *
+     * @param matrix The matrix to be multiplied
+     * @param scale  The scale
+     * @return The scaled matrix
      */
     public static Matrix scalarMultiplication(Matrix matrix, double scale) {
         Matrix result = new Matrix(matrix);
@@ -234,8 +245,9 @@ public class Matrix {
 
     /**
      * Transpose matrix
-     * @param matrix   The matrix to transpose
-     * @return  The transposed matrix
+     *
+     * @param matrix The matrix to transpose
+     * @return The transposed matrix
      */
     public static Matrix transpose(Matrix matrix) {
         Matrix result = new Matrix(matrix.numOfColumns, matrix.numOfRows);
@@ -262,8 +274,9 @@ public class Matrix {
 
     /**
      * Perform LU Decomposition on the given matrix
-     * @param matrix    The matrix to be de-composited.
-     * @return  The de-composited matrix
+     *
+     * @param matrix The matrix to be de-composited.
+     * @return The de-composited matrix
      */
     public static LUMatrixGroup luDecomposition(Matrix matrix) {
         Matrix upper = new Matrix(matrix);
@@ -292,7 +305,7 @@ public class Matrix {
      * Inverse the given matrix
      *
      * @param matrix The original
-     * @return  The inverse matrix of the original matrix
+     * @return The inverse matrix of the original matrix
      */
     public static Matrix inverse(Matrix matrix) {
         Matrix cloned = new Matrix(matrix);
@@ -395,8 +408,9 @@ public class Matrix {
 
     /**
      * Create a square matrix initialized as identity matrix
-     * @param size  The size of the matrix [size, size]
-     * @return  The identity matrix.
+     *
+     * @param size The size of the matrix [size, size]
+     * @return The identity matrix.
      */
     public static Matrix createIdentity(int size) {
         Matrix x = createNewEmptyMatrix(size, size);
@@ -411,12 +425,12 @@ public class Matrix {
      * <p>
      * This version use OpenCL implementation.
      * Noticed that for smaller matrix, the single threaded cpu version is generally faster in execution
-     * @see Matrix#multiplication(Matrix, Matrix)
      *
      * @param matrixA The first matrix
      * @param matrixB The second matrix
      * @return The result of the multiplication
      * @throws MatrixDimensionsNotMatchException
+     * @see Matrix#multiplication(Matrix, Matrix)
      */
     public static Matrix clMultiplication(Matrix matrixA, Matrix matrixB) throws MatrixDimensionsNotMatchException {
         return clTasker.clMatrixMultiply(matrixA, matrixB);
@@ -428,12 +442,12 @@ public class Matrix {
      * <br>
      * This version is multiThreaded.
      * Noticed that for smaller matrix, the single threaded cpu version is generally faster in execution
-     * @see Matrix#multiplication(Matrix, Matrix)
      *
      * @param matrixA The first matrix
      * @param matrixB The second matrix
      * @return The result of the multiplication
      * @throws MatrixDimensionsNotMatchException
+     * @see Matrix#multiplication(Matrix, Matrix)
      */
     public static Matrix multiThreadedMultiplication(Matrix matrixA, Matrix matrixB) throws MatrixDimensionsNotMatchException {
         if (matrixA.getNumOfColumns() != matrixB.getNumOfRows())
@@ -458,18 +472,17 @@ public class Matrix {
      * This version is multiThreaded.
      * Noticed that for smaller matrix, the single threaded cpu version is generally faster in execution
      *
-     * @see Matrix#addition(Matrix, Matrix)
-     *
-     * @param m1    The first matrix
-     * @param m2    The second matrix
+     * @param m1 The first matrix
+     * @param m2 The second matrix
      * @return answer
      * @throws MatrixDimensionsNotMatchException
+     * @see Matrix#addition(Matrix, Matrix)
      */
-    public static Matrix multiThreadedAddition(Matrix m1, Matrix m2) throws MatrixDimensionsNotMatchException{
+    public static Matrix multiThreadedAddition(Matrix m1, Matrix m2) throws MatrixDimensionsNotMatchException {
         Matrix result = new Matrix(ensureSameSize(m1, m2));
         CountDownLatch latch = new CountDownLatch(result.numOfRows);
-        for (int i=0; i<result.numOfRows;i++){
-            pm.giveRequest(new AdditionRequest(result, m1, m2, i , latch));
+        for (int i = 0; i < result.numOfRows; i++) {
+            pm.giveRequest(new AdditionRequest(result, m1, m2, i, latch));
         }
         try {
             latch.await();
@@ -493,14 +506,17 @@ public class Matrix {
 
     /**
      * Get the number of rows of this Matrix
-     * @return  The number of rows
+     *
+     * @return The number of rows
      */
     public int getNumOfRows() {
         return numOfRows;
     }
+
     /**
      * Get the number of columns of this Matrix
-     * @return  The number of columns
+     *
+     * @return The number of columns
      */
     public int getNumOfColumns() {
         return numOfColumns;
@@ -511,9 +527,8 @@ public class Matrix {
      * In the implementation it is equal to getNumOfColumns() as
      * they have the same meaning.
      *
+     * @return The size of a single row
      * @see Matrix#getNumOfColumns()
-     *
-     * @return  The size of a single row
      */
     public int getRowSize() {
         return numOfColumns;
@@ -524,9 +539,8 @@ public class Matrix {
      * In the implementation it is equal to getNumOfRows() as
      * they have the same meaning.
      *
+     * @return The size of a single column
      * @see Matrix#getNumOfRows()
-     *
-     * @return  The size of a single column
      */
     public int getColumnSize() {
         return numOfRows;
@@ -534,6 +548,7 @@ public class Matrix {
 
     /**
      * Get the number of entries (data) in this matrix
+     *
      * @return The number of entries
      */
     public int getNumOfEntries() {
@@ -542,8 +557,9 @@ public class Matrix {
 
     /**
      * Get a single datum in this matrix
-     * @param rowNumber     The row number of the datum
-     * @param columnNumber  The column number of the datum
+     *
+     * @param rowNumber    The row number of the datum
+     * @param columnNumber The column number of the datum
      * @return The datum
      */
     public double getDatum(int rowNumber, int columnNumber) {
@@ -554,8 +570,9 @@ public class Matrix {
 
     /**
      * Get a row from this matrix
-     * @param rowNumber     The row number
-     * @return  The row
+     *
+     * @param rowNumber The row number
+     * @return The row
      */
     public double[] getRow(int rowNumber) {
         if (rowNumber > numOfRows || rowNumber < 0)
@@ -567,8 +584,9 @@ public class Matrix {
 
     /**
      * Get a column from this matrix
-     * @param columnNumber  The column number
-     * @return  The column
+     *
+     * @param columnNumber The column number
+     * @return The column
      */
     public double[] getColumn(int columnNumber) {
         if (columnNumber > numOfColumns || columnNumber < 0)
@@ -581,9 +599,10 @@ public class Matrix {
 
     /**
      * Set a single datum in this matrix
-     * @param rowNumber     The row number of the datum
-     * @param columnNumber  The column number of the datum
-     * @param datum         The datum to set
+     *
+     * @param rowNumber    The row number of the datum
+     * @param columnNumber The column number of the datum
+     * @param datum        The datum to set
      */
     public void setDatum(int rowNumber, int columnNumber, double datum) {
         if (rowNumber > numOfRows || rowNumber < 0 || columnNumber > numOfColumns || columnNumber < 0)
@@ -593,8 +612,9 @@ public class Matrix {
 
     /**
      * Set a single row in this matrix
-     * @param rowNumber     The row number of the row to set
-     * @param newData       The data to set
+     *
+     * @param rowNumber The row number of the row to set
+     * @param newData   The data to set
      */
     public void setRow(int rowNumber, double[] newData) {
         if (rowNumber > numOfRows || rowNumber < 0 || newData.length > getRowSize())
@@ -604,8 +624,9 @@ public class Matrix {
 
     /**
      * Set a single column in this matrix
-     * @param columnNumber  The column number of the column to set
-     * @param newData       The data to set
+     *
+     * @param columnNumber The column number of the column to set
+     * @param newData      The data to set
      */
     public void setColumn(int columnNumber, double[] newData) {
         if (columnNumber > numOfColumns || columnNumber < 0 || newData.length > getColumnSize())
@@ -640,8 +661,9 @@ public class Matrix {
 
     /**
      * Multiply a row in this Matrix
-     * @param rowNumber     The row to be multiplied
-     * @param scale         The scale factor of the row
+     *
+     * @param rowNumber The row to be multiplied
+     * @param scale     The scale factor of the row
      */
     public void multiplyRow(int rowNumber, double scale) {
         double[] tempRow = getRow(rowNumber);
@@ -652,8 +674,9 @@ public class Matrix {
 
     /**
      * Multiply a column in this Matrix
-     * @param columnNumber  The column to be multiplied
-     * @param scale         The scale factor of the row
+     *
+     * @param columnNumber The column to be multiplied
+     * @param scale        The scale factor of the row
      */
     public void multiplyColumn(int columnNumber, double scale) {
         double[] tempColumn = getColumn(columnNumber);
@@ -664,9 +687,10 @@ public class Matrix {
 
     /**
      * Add multiples of Row A to Row B in this Matrix
-     * @param sourceRow     The source row (rowA)
-     * @param targetRow     The target row (rowB)
-     * @param scale         The scale of source row
+     *
+     * @param sourceRow The source row (rowA)
+     * @param targetRow The target row (rowB)
+     * @param scale     The scale of source row
      */
     public void addMultiplesToRow(int sourceRow, int targetRow, double scale) {
         double[] tempRow = getRow(sourceRow);
@@ -679,9 +703,10 @@ public class Matrix {
 
     /**
      * Add multiples of Column A to Column B in this Matrix
-     * @param sourceColumn     The source column (columnA)
-     * @param targetColumn     The target column (columnB)
-     * @param scale         The scale of source column
+     *
+     * @param sourceColumn The source column (columnA)
+     * @param targetColumn The target column (columnB)
+     * @param scale        The scale of source column
      */
     public void addMultiplesToColumn(int sourceColumn, int targetColumn, double scale) {
         double[] tempColumn = getColumn(sourceColumn);
@@ -695,7 +720,7 @@ public class Matrix {
      * Multiply each entry in the Matrix m to each entry this Matrix (In-place)
      *
      * @param m The matrix to multiply
-     * @return  The result matrix
+     * @return The result matrix
      * @throws MatrixDimensionsNotMatchException
      */
     public Matrix linearMultiplication(Matrix m) throws MatrixDimensionsNotMatchException {
@@ -718,6 +743,7 @@ public class Matrix {
 
     /**
      * Check if this matrix is a square matrix
+     *
      * @return true if it is a square matrix, otherwise false
      */
     public boolean isSquareMatrix() {
@@ -726,7 +752,8 @@ public class Matrix {
 
     /**
      * Get a {@code MatrixDimension} object of this matrix
-     * @return  The object
+     *
+     * @return The object
      */
     public MatrixDimension getDimension() {
         return new MatrixDimension(numOfRows, numOfColumns);
@@ -767,6 +794,7 @@ public class Matrix {
 
     /**
      * Fill the matrix with random doubles
+     *
      * @return this matrix
      */
     public Matrix fillRandomDoubles() {
@@ -781,7 +809,7 @@ public class Matrix {
      * <br>
      * Example: {@code matrix.forEach(e => e+1);}
      *
-     * @param function  The function to perform
+     * @param function The function to perform
      */
     public void forEach(DoubleFunction<Double> function) {
         for (int i = 0; i < data.length; i++)
@@ -790,7 +818,8 @@ public class Matrix {
 
     /**
      * Get the data array of this matrix
-     * @return  The data array
+     *
+     * @return The data array
      */
     public double[] getData() {
         return this.data;
@@ -798,6 +827,7 @@ public class Matrix {
 
     /**
      * Set the data of this matrix given a {@code DoubleBuffer} (used in OpenCL matrix function).
+     *
      * @param buffer The DoubleBuffer object
      */
     public void setData(DoubleBuffer buffer) {
@@ -810,7 +840,8 @@ public class Matrix {
 
     /**
      * Get the data array of this matrix as a float array
-     * @return  The data array
+     *
+     * @return The data array
      */
     public float[] getDataAsFloat() {
         float[] fs = new float[data.length];
@@ -869,9 +900,12 @@ class ParallelMatrixMonitor {
         }
     }
 
-    public void stopWorkers() {
+    public synchronized void stopWorkers() {
         for (int i = 0; i < threadPool.length; i++) {
             threadPool[i].terminate();
+            // Dummies request equals to the size of thread pool is created in order to
+            // bring all threads out of the wait() method.
+            giveRequest(() -> {});
         }
     }
 
@@ -889,7 +923,7 @@ class ParallelMatrixMonitor {
         notifyAll();
     }
 
-    public synchronized CalculationRequest takeRequest() {
+    public synchronized Optional<CalculationRequest> takeRequest() {
         while (count <= 0) {
             try {
                 wait();
@@ -901,7 +935,7 @@ class ParallelMatrixMonitor {
         head = (head + 1) % requestsQueue.length;
         count--;
         notifyAll();
-        return request;
+        return Optional.ofNullable(request);
     }
 }
 
@@ -912,7 +946,8 @@ class ParallelMatrixMonitor {
  */
 class Worker extends Thread {
     private final ParallelMatrixMonitor monitor;
-    private boolean alive = true;
+
+    private volatile boolean alive = true;
 
     Worker(ParallelMatrixMonitor monitor) {
         this.monitor = monitor;
@@ -925,8 +960,8 @@ class Worker extends Thread {
     @Override
     public void run() {
         while (alive) {
-            CalculationRequest request = monitor.takeRequest();
-            request.calculate();
+            Optional<CalculationRequest> request = monitor.takeRequest();
+            request.ifPresent(CalculationRequest::calculate);
         }
     }
 
@@ -942,7 +977,7 @@ class Worker extends Thread {
  * a {@code CountDownLatch} is used.
  * </p>
  */
-class MultiplyRequest extends BaseRequest{
+class MultiplyRequest extends BaseRequest {
     public MultiplyRequest(Matrix container, Matrix matrixA, Matrix matrixB, int row, CountDownLatch latch) {
         super(container, matrixA, matrixB, row, latch);
     }
@@ -971,7 +1006,7 @@ class MultiplyRequest extends BaseRequest{
  * </p>
  */
 class AdditionRequest extends BaseRequest {
-    public AdditionRequest(Matrix container, Matrix matrixA, Matrix matrixB, int row, CountDownLatch latch){
+    public AdditionRequest(Matrix container, Matrix matrixA, Matrix matrixB, int row, CountDownLatch latch) {
         super(container, matrixA, matrixB, row, latch);
     }
 
