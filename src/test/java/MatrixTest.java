@@ -1,6 +1,7 @@
 import exceptions.MatrixDimensionsNotMatchException;
 import objects.LUMatrixGroup;
 import objects.Matrix;
+import objects.OpenCLInteractor;
 import org.junit.jupiter.api.Test;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
@@ -25,7 +26,7 @@ import static org.lwjgl.opencl.CL10.CL_DEVICE_TYPE_ALL;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
 
-public class MatrixTest {
+class MatrixTest {
 
 
     private double[] randomizeDoubleArray(int size){
@@ -79,6 +80,9 @@ public class MatrixTest {
         transposed.setColumn(2, new double[]{-3,7,1});
         System.out.println("Result:");
         System.out.println(transposed);
+        assertSame(Matrix.createNewFilledMatrix(new double[]{1,2,3},new double[]{4,5,2},new double[]{7,8,9}), matrix);
+        assertSame(Matrix.createNewFilledMatrix(new double[]{1,4,-3},new double[]{2,5,7},new double[]{3,6,1}), transposed);
+
     }
 
     @Test
@@ -481,7 +485,7 @@ public class MatrixTest {
         Matrix matrix = Matrix.createNewFilledMatrix(new double[]{2,-3}, new double[]{-1,4});
         Matrix vector = Matrix.createNewEmptyColumnVector(2);
 
-        Matrix.startOfLibrary();
+        Matrix.enableOpenCL();
 
         vector.setColumn(0, new double[]{1, -1});
         System.out.println("Original matrix:");
@@ -492,7 +496,29 @@ public class MatrixTest {
         System.out.println(Matrix.clMultiplication(matrix,vector));
 
         // ensure thread stop
-        Matrix.endOfLibrary();
+        Matrix.disableOpenCL();
     }
+
+
+    @Test
+    void NewOpenCLTest(){
+        OpenCLInteractor ocli = new OpenCLInteractor();
+        ocli.initialize();
+        assertThrowsExactly(NullPointerException.class, ()->ocli.exit());   // Expected to throw a NullPointerException
+    }
+    @Test
+    void NewOpenCLTest2(){
+        OpenCLInteractor ocli = new OpenCLInteractor();
+        ocli.initialize();
+
+        Matrix weights = Matrix.createNewFilledMatrix(2,2, new double[]{1,2,3,4});
+        Matrix inputs = Matrix.createNewFilledColumnVector(1,2);
+        Matrix bias = Matrix.createNewFilledColumnVector(1,1);
+        System.out.println(ocli.clForwardPass(weights,inputs,bias, 0));
+        ocli.exit();
+
+    }
+
+
 
 }

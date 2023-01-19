@@ -5,11 +5,9 @@ import exceptions.MatrixDimensionsNotMatchException;
 import exceptions.MatrixIndexOutofBoundException;
 import exceptions.MatrixInitialSizeException;
 import exceptions.NoInverseException;
-import util.OpenCLTasker;
 
 import java.nio.DoubleBuffer;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.function.DoubleFunction;
 import java.util.stream.DoubleStream;
@@ -23,7 +21,8 @@ import java.util.stream.Stream;
 public class Matrix {
 
     public static final int NUM_OF_THREADS = Runtime.getRuntime().availableProcessors();
-    private static final OpenCLTasker clTasker = new OpenCLTasker();
+    private static final OpenCLInteractor clInteractor = new OpenCLInteractor();
+
     /**
      * The monitor for all worker threads, the number of worker
      * threads spawned is equals to the computer's available cores
@@ -434,7 +433,7 @@ public class Matrix {
      * @see Matrix#multiplication(Matrix, Matrix)
      */
     public static Matrix clMultiplication(Matrix matrixA, Matrix matrixB) throws MatrixDimensionsNotMatchException {
-        return clTasker.clMatrixMultiply(matrixA, matrixB);
+        return clInteractor.clMultiply(matrixA, matrixB);
     }
 
     /**
@@ -493,12 +492,12 @@ public class Matrix {
         return result;
     }
 
-    public static void startOfLibrary() {
-        clTasker.startTask();
+    public static void enableOpenCL() {
+        clInteractor.initialize();
     }
 
-    public static void endOfLibrary() {
-        clTasker.stopTask();
+    public static void disableOpenCL() {
+        clInteractor.exit();
     }
 
     public static void stopLibraryWorker() {
