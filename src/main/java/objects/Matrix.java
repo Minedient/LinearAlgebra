@@ -437,6 +437,22 @@ public class Matrix {
     }
 
     /**
+     * Multiply two matrix together, add the third matrix and activate the final matrix given the mode
+     * The matrix must meet the requirement for multiplying Matrix.
+     * <p>
+     * This version use OpenCL implementation.
+     *
+     * @param weights   The weight matrix
+     * @param inputs    The input matrix
+     * @param bias      The bias matrix
+     * @param mode      The mode used to activate
+     * @return The result
+     */
+    public static Matrix clForwardPass(Matrix weights, Matrix inputs, Matrix bias, int mode){
+        return clInteractor.clForwardPass(weights, inputs, bias, mode);
+    }
+
+    /**
      * Multiply two matrix together and return a new Matrix.
      * The matrix must meet the requirement for multiplying Matrix.
      * <br>
@@ -489,6 +505,46 @@ public class Matrix {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        return result;
+    }
+
+    /**
+     * Convoluted the two matrix together
+     * @param m1 The first matrix
+     * @param m2 The kernel/mask/convolution matrix
+     * @return The result matrix
+     */
+    public static Matrix convolution(Matrix m1, Matrix m2) {
+        //Find the result matrix size
+        int resultRow = m1.getNumOfRows() - m2.getNumOfRows() + 1;
+        int resultCol = m1.getNumOfColumns() - m2.getNumOfColumns() + 1;
+        Matrix result = new Matrix(resultRow, resultCol);
+
+        //Multithreaded convolution
+        CountDownLatch latch = new CountDownLatch(resultRow*resultCol);
+        for(int i = 0; i<result.getNumOfEntries();i++){
+            pm.giveRequest(new ConvolutionRequest(result, m1, m2, i, latch));
+        }
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        /*
+        //Convolute the matrix
+        for (int i = 0; i < resultRow; i++) {
+            for (int j = 0; j < resultCol; j++) {
+                double sum = 0;
+                for (int k = 0; k < m2.getNumOfRows(); k++) {
+                    for (int l = 0; l < m2.getNumOfColumns(); l++) {
+                        sum += m1.getDatum(i + k, j + l) * m2.getDatum(k, l);
+                    }
+                }
+                result.setDatum(i, j, sum);
+            }
+        }
+        */
         return result;
     }
 
@@ -793,6 +849,26 @@ public class Matrix {
     }
 
     /**
+     * Get the sub-matrix of this matrix
+     * @param rowStart The starting row index
+     * @param rowEnd The ending row index
+     * @param colStart The starting column index
+     * @param colEnd The ending column index
+     * @return The sub-matrix
+     */
+    public Matrix getPartialMatrix(int rowStart, int rowEnd, int colStart, int colEnd){
+        if(rowStart < 0 || rowEnd > numOfRows || colStart < 0 || colEnd > numOfColumns)
+            throw new MatrixIndexOutofBoundException();
+        Matrix result = new Matrix(rowEnd-rowStart, colEnd-colStart);
+        for(int i = rowStart; i < rowEnd; i++){
+            for(int j = colStart; j < colEnd; j++){
+                result.setDatum(i-rowStart, j-colStart, getDatum(i, j));
+            }
+        }
+        return result;
+    }
+
+    /**
      * Fill the matrix with random doubles
      *
      * @return this matrix
@@ -921,3 +997,24 @@ class AdditionRequest extends BaseRequest {
     }
 }
 
+class ConvolutionRequest extends BaseRequest{
+    public ConvolutionRequest(Matrix container, Matrix matrixA, Matrix matrixB, int index, CountDownLatch latch) {
+        super(container, matrixA, matrixB, index, latch);
+    }
+
+    @Override
+    public void calculate() {
+        //Find the starting point of convolution
+        int lrow = row / container.getNumOfColumns();
+        int lcol = row % container.getNumOfColumns();
+        Matrix partial = matrixA.getPartialMatrix(lrow, lrow + matrixB.getNumOfRows(), lcol, lcol + matrixB.getNumOfColumns());
+        double sum = 0;
+        for(int i = 0; i < matrixB.getNumOfRows(); i++){
+            for(int j = 0; j < matrixB.getNumOfColumns(); j++){
+                sum += partial.getDatum(i, j) * matrixB.getDatum(i, j);
+            }
+        }
+        container.setDatum(lrow, lcol, sum);
+        latch.countDown();
+    }
+}

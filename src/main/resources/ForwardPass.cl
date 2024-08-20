@@ -11,8 +11,9 @@ double activationMode(const double value, const int MODE){
         case 4: // SoftPlus
             return log(1 + exp(value));
         case 0: // LeakyReLU
-        default:
             return (value >= 0) ? value : 0.01 * value;
+        default:
+            return value;
     }
 
 }

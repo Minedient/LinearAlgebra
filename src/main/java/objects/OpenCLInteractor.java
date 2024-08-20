@@ -206,7 +206,7 @@ public class OpenCLInteractor {
         clFinish(queue);
 
         clSetKernelArg1i(kernels.get(1), 0, weights.getNumOfRows());        // set M
-        clSetKernelArg1i(kernels.get(1), 1, inputs.getNumOfColumns());     // set N
+        clSetKernelArg1i(kernels.get(1), 1, inputs.getNumOfColumns());      // set N
         clSetKernelArg1i(kernels.get(1), 2, weights.getNumOfColumns());     // set K
         clSetKernelArg1p(kernels.get(1), 3, matrixAMemory);                 // set weightMatrix    use 1p instead of 1d where p stands for pointer, not flowPoint, as I pass an ARRAY!@!!!!!
         clSetKernelArg1p(kernels.get(1), 4, matrixBMemory);                 // set inputsMatrix

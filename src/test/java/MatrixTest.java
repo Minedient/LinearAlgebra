@@ -28,6 +28,7 @@ import static org.lwjgl.system.MemoryUtil.memUTF8;
 
 class MatrixTest {
 
+    private static final String O_MATRIX = "Original matrix:";
 
     private double[] randomizeDoubleArray(int size){
         double[] a = new double[size];
@@ -100,7 +101,7 @@ class MatrixTest {
     void luDecompositionTest(){
         Matrix matrix = Matrix.createNewFilledMatrix(new double[]{1,2,3},new double[]{4,5,6},new double[]{7,8,8});
         LUMatrixGroup lu = Matrix.luDecomposition(matrix);
-        System.out.println("Original matrix:");
+        System.out.println(O_MATRIX);
         System.out.println(matrix);
         System.out.println("L Matrix");
         System.out.println(lu.l());
@@ -111,7 +112,7 @@ class MatrixTest {
     @Test
     void determinantTest() throws MatrixDimensionsNotMatchException {
         Matrix matrix = Matrix.createNewFilledMatrix(new double[]{1,2,3},new double[]{4,5,6},new double[]{7,8,8});
-        System.out.println("Original matrix:");
+        System.out.println(O_MATRIX);
         System.out.println(matrix);
         System.out.println("Determinant: " + Matrix.determinant(matrix));
     }
@@ -120,7 +121,7 @@ class MatrixTest {
     void multiplicationTest() throws MatrixDimensionsNotMatchException {
         Matrix matrix = Matrix.createNewFilledMatrix(new double[]{1,2,3},new double[]{4,5,6},new double[]{7,8,8});
         LUMatrixGroup lu = Matrix.luDecomposition(matrix);
-        System.out.println("Original matrix:");
+        System.out.println(O_MATRIX);
         System.out.println(matrix);
         System.out.println("L Matrix");
         System.out.println(lu.l());
@@ -148,7 +149,7 @@ class MatrixTest {
     void inverseTest() throws MatrixDimensionsNotMatchException {
         Matrix matrix = Matrix.createNewFilledMatrix(new double[]{1,2,3},new double[]{4,5,6},new double[]{7,8,8});
         Matrix inverse = Matrix.inverse(matrix);
-        System.out.println("Original matrix:");
+        System.out.println(O_MATRIX);
         System.out.println(matrix);
         System.out.println("Inverse:");
         System.out.println(inverse);
@@ -169,7 +170,7 @@ class MatrixTest {
         Matrix matrix = Matrix.createNewFilledMatrix(new double[]{2,-3}, new double[]{-1,4});
         Matrix vector = Matrix.createNewEmptyColumnVector(2);
         vector.setColumn(0, new double[]{1, -1});
-        System.out.println("Original matrix:");
+        System.out.println(O_MATRIX);
         System.out.println(matrix);
         System.out.println("Original vector:");
         System.out.println(vector);
@@ -180,8 +181,8 @@ class MatrixTest {
 
     @Test
     void singleThreadedMultiplicationSpeed(){
-        Matrix a = Matrix.createNewEmptyMatrix(2000,2000).fillRandomDoubles();
-        Matrix b = Matrix.createNewEmptyMatrix(2000,2000).fillRandomDoubles();
+        Matrix a = Matrix.createNewEmptyMatrix(16,786).fillRandomDoubles();
+        Matrix b = Matrix.createNewEmptyMatrix(786,10).fillRandomDoubles();
 
         long start = System.currentTimeMillis();
         for (int i = 0; i < 10; i++) {
@@ -192,13 +193,13 @@ class MatrixTest {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println("Average time taken: " + (System.currentTimeMillis() - start) / 10000.0 + " seconds");
+        System.out.println("Average time taken: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
     }
 
     @Test
     void multiThreadedMultiplicationSpeed(){
-        Matrix a = Matrix.createNewEmptyMatrix(2000,2000).fillRandomDoubles();
-        Matrix b = Matrix.createNewEmptyMatrix(2000,2000).fillRandomDoubles();
+        Matrix a = Matrix.createNewEmptyMatrix(16,786).fillRandomDoubles();
+        Matrix b = Matrix.createNewEmptyMatrix(786,10).fillRandomDoubles();
 
         long start = System.currentTimeMillis();
         for (int i = 0; i < 10; i++) {
@@ -209,7 +210,7 @@ class MatrixTest {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println("Average time taken: " + (System.currentTimeMillis() - start) / 10000.0 + " seconds");
+        System.out.println("Average time taken: " + (System.currentTimeMillis() - start) / 1000.0 + " seconds");
     }
 
 
@@ -218,7 +219,7 @@ class MatrixTest {
         Matrix matrix = Matrix.createNewFilledMatrix(new double[]{2,-3}, new double[]{-1,4});
         Matrix vector = Matrix.createNewEmptyColumnVector(2);
         vector.setColumn(0, new double[]{1, -1});
-        System.out.println("Original matrix:");
+        System.out.println(O_MATRIX);
         System.out.println(matrix);
         System.out.println("Original vector:");
         System.out.println(vector);
@@ -296,12 +297,12 @@ class MatrixTest {
 
     @Test
     void openCL() throws IOException {
-        Matrix matrixA = Matrix.createNewFilledMatrix(new double[]{1,2,3,4}, new double[]{5,6,7,8}, new double[]{9,10,11,12}, new double[]{13,14,15,16});
-        Matrix matrixB = Matrix.createNewFilledMatrix(new double[]{1,2,3,4}, new double[]{5,6,7,8}, new double[]{9,10,11,12}, new double[]{13,14,15,16});
+        //Matrix matrixA = Matrix.createNewFilledMatrix(new double[]{1,2,3,4}, new double[]{5,6,7,8}, new double[]{9,10,11,12}, new double[]{13,14,15,16});
+        //Matrix matrixB = Matrix.createNewFilledMatrix(new double[]{1,2,3,4}, new double[]{5,6,7,8}, new double[]{9,10,11,12}, new double[]{13,14,15,16});
         //Matrix matrixA = Matrix.createNewFilledMatrix(new double[]{1,2}, new double[]{3,4});
         //Matrix matrixB = Matrix.createNewFilledColumnVector(1,2);
-        //Matrix matrixA = Matrix.createNewEmptyMatrix(8000,8000).fillRandomDoubles();
-        //Matrix matrixB = Matrix.createNewEmptyMatrix(8000,8000).fillRandomDoubles();
+        Matrix matrixA = Matrix.createNewEmptyMatrix(2000,2000).fillRandomDoubles();
+        Matrix matrixB = Matrix.createNewEmptyMatrix(2000,2000).fillRandomDoubles();
         Matrix matrixC = Matrix.createNewEmptyMatrix(matrixA.getNumOfRows(), matrixB.getNumOfColumns());
         final DoubleBuffer a = toDoubleBuffer(matrixA.getData());
         final DoubleBuffer b = toDoubleBuffer(matrixB.getData());
@@ -512,11 +513,25 @@ class MatrixTest {
         ocli.initialize();
 
         Matrix weights = Matrix.createNewFilledMatrix(2,2, new double[]{1,2,3,4});
-        Matrix inputs = Matrix.createNewFilledColumnVector(1,2);
+        Matrix inputs = Matrix.createNewFilledColumnVector(2,2);
         Matrix bias = Matrix.createNewFilledColumnVector(1,1);
         System.out.println(ocli.clForwardPass(weights,inputs,bias, 0));
         ocli.exit();
 
+    }
+
+    @Test
+    void ConvolutionTest(){
+        Matrix inputs = Matrix.createNewFilledMatrix(7,7, new double[]{0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0});
+        Matrix kernel = Matrix.createNewFilledMatrix(3,3, new double[]{0,0,1,1,0,0,0,1,1});
+        System.out.println(Matrix.convolution(inputs, kernel));
+    }
+
+    @Test
+    void ConvolutionTest2(){
+        Matrix inputs = Matrix.createNewFilledMatrix(5,5, new double[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25});
+        Matrix kernel = Matrix.createNewFilledMatrix(3,3, new double[]{1,1,1,1,1,1,1,1,1});
+        System.out.println(Matrix.convolution(inputs, kernel));
     }
 
 
